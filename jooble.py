@@ -46,7 +46,10 @@ def main(args):
     del form_data['country_code']
     
     jobs = request_data(url, form_data)
-
+    if len(jobs) == 0:
+        print('No matches found for given search filters')
+        sys.exit()
+        
     normalized_jobs = normalize_job_data(jobs)
     filtered_jobs = filter_job_data(normalized_jobs)
     
@@ -242,11 +245,15 @@ def normalize_job_data(jobs, nested_objs=config.RESULT_NESTED_OBJS):
         normalized.append(job)
         
     return normalized
- 
+
 def filter_job_data(jobs, keys=config.RESULT_KEYS):
     return [{key:value for key, value in job.items() if key in keys} for job in jobs]
 
 def save_to_csv(jobs):
+    if jobs == []:
+        print('Job list is empty. Data export is aborted')
+        return
+    
     print("Exporting data...")
     
     # get current time without milliseconds
@@ -256,7 +263,7 @@ def save_to_csv(jobs):
     file_name = current_time.replace(' ', '_') + '.csv'
     
     with open(file_name, 'w', newline = '') as csv_file:
-        csv_writer = csv.writer( csv_file, quoting=csv.QUOTE_NONNUMERIC )
+        csv_writer = csv.writer( csv_file, quoting=csv.QUOTE_NONNUMERIC )    
         csv_writer.writerow( list(jobs[0].keys()) )
         csv_writer.writerows( [job.values() for job in jobs] )
         
