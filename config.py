@@ -1,9 +1,9 @@
 ################
 # General 
 
-PROGRAM_NAME   = "Jooble Scraper"
-RESOURCE_PATH  = "jooble.org/api/serp/jobs"
-REQ_DELAY      = 4
+PROGRAM_NAME   = 'Jooble Scraper'
+RESOURCE_PATH  = 'jooble.org/api/serp/jobs'
+REQ_DELAY      = 3
 MAX_PAGES      = 6
 EXPORT_RESULTS = True
 
@@ -53,11 +53,11 @@ JTYPE_PART_TIME = 3
 
 SEARCH        = ''
 DATE          = DATE_1_DAY
-LOCATION      = LOC_25_MILES
-COUNTRY_CODE  = "rs"
+LOCATION      = LOC_REMOTE
+COUNTRY_CODE  = 'rs'
 REGION        = ''
 JOB_TYPES     = ['full', 'temp', 'part']
-EXPERIENCE    = EXP_INTERSHIP
+EXPERIENCE    = EXP_ANY
 
 SALARY_MIN       = 1
 SALARY_MAX       = 999999
