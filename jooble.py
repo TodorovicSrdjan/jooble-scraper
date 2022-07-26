@@ -54,7 +54,7 @@ def main(args):
     filtered_jobs = filter_job_data(normalized_jobs)
     
     if should_export:
-        save_to_csv(normalized_jobs)
+        save_to_csv(filtered_jobs)
         
 '''
 Prints out program banner
