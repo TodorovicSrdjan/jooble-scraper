@@ -42,10 +42,12 @@ def main(args):
     url = f"https://{form_data['country_code']}.{config.RESOURCE_PATH}"
     del form_data['country_code']
     
-    data = request_data(url, form_data)
+    jobs = request_data(url, form_data)
+
+    normalized_jobs = normalize_job_data(jobs)
     
     if args['export']:
-        save_to_csv(data)
+        save_to_csv(normalized_jobs)
         
 '''
 Prints out program banner
@@ -220,6 +222,23 @@ def request_data(url, form_data, npage=0):
             
     return jobs
 
+def normalize_job_data(jobs, nested_objs=config.RESULT_NESTED_OBJS):
+    normalized = []
+    
+    for job in jobs:
+        # Flatten nested objects
+        for nested_obj in nested_objs:
+            for key, value in job[nested_obj].items():
+                job[f"{nested_obj}_{key}"] = value
+            del job[nested_obj]
+        
+        # Make the tag list atomic
+        job['tags'] = ', '.join(job['tags'])
+        
+        normalized.append(job)
+        
+    return normalized
+ 
 def save_to_csv(jobs):
     print("Exporting data...")
     
@@ -229,28 +248,10 @@ def save_to_csv(jobs):
     # replace spaces to avoid problems with filename
     file_name = current_time.replace(' ', '_') + '.csv'
     
-    headers = list(jobs[0].keys()) 
-    for obj_name in ['company', 'location', 'awayData']:
-        headers += [f"{obj_name}_{key}" for key in jobs[0][obj_name].keys()]
-    
     with open(file_name, 'w', newline = '') as csv_file:
         csv_writer = csv.writer( csv_file, quoting=csv.QUOTE_NONNUMERIC )
-        
-        csv_writer.writerow( headers )
-        
-        for job in jobs:
-            to_add = []
-            
-            for obj_name in ['company', 'location', 'awayData']:
-                to_add += [obj_value for obj_value in job[obj_name]]
-                del job[obj_name]
-                
-            job['tags'] = ', '.join(job['tags'])
-            
-            values = list(job.values()) + to_add
-             
-             
-            csv_writer.writerow( values )
+        csv_writer.writerow( list(jobs[0].keys()) )
+        csv_writer.writerows( [job.values() for job in jobs] )
         
     print(f"Data is successfuly exported to '{file_name}'")    
     

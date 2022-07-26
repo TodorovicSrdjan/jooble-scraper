@@ -9,23 +9,28 @@ MAX_PAGES      = 6
 ################
 # Constats
 
-# Experience
+## Generic
+### Nested objects inside job object
+RESULT_NESTED_OBJS=['company', 'location', 'awayData']
+
+## Jooble-related
+### Experience
 EXP_ANY       = 0
 EXP_INTERSHIP = 2
 
-# Date
+### Date
 DATE_ANY        = 7
 DATE_1_DAY      = 8
 DATE_3_DAYS     = 2
 DATE_7_DAYS     = 3
 
-# Location
+### Location
 LOC_REMOTE   = 2
 LOC_EXECT    = 4
 LOC_10_MILES = 5
 LOC_25_MILES = 6
 
-# Job type
+### Job type
 JTYPE_DEFAULT   = 0
 JTYPE_FULL_TIME = 1
 JTYPE_TEMPORARY = 2
