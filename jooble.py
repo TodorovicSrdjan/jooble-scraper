@@ -97,14 +97,14 @@ def parse_arguments():
     parser.add_argument('-m', '--min-salary', 
                         help='show jobs with salary greater then MIN',
                         type=int,
-                        default=1,
+                        default=FLAG_MISSING_SALARY_LIMIT,
                         dest='salaryMin', 
                         metavar='MIN')
     
     parser.add_argument('-M', '--max-salary', 
                         help='show jobs with salary lower then MAX',
                         type=int,
-                        default=999999,
+                        default=FLAG_MISSING_SALARY_LIMIT,
                         dest='salaryMax', 
                         metavar='MAX')
     
@@ -138,9 +138,19 @@ def parse_arguments():
     return vars(parser.parse_args())
     
 def adapt_args_for_api(args):
+    if 'salaryMin' in args and args['salaryMin'] == config.FLAG_MISSING_SALARY_LIMIT:
+        del args['salaryMin']
+        
+    if 'salaryMax' in args and args['salaryMax'] == config.FLAG_MISSING_SALARY_LIMIT:
+        del args['salaryMax']
+    
     if 'salaryMin' in args and 'salaryMax' in args:
-        if int(args['salaryMin']) > int(args['salaryMax']):
+        if args['salaryMin'] > args['salaryMax']:
             raise ValueError('Minimal salary cannot be greater then maximal salary.')
+    
+    # API will treat presence of this arg as True so it should be removed if it has value False
+    if 'withSalary' in args and not args['withSalary']:
+        del args['withSalary']
     
     if 'experience' in args:
         if args['experience'] == 'any':

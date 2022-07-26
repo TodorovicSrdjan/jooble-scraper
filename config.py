@@ -32,6 +32,9 @@ RESULT_KEYS = [
     'location_name'
     ]
 
+### Script flags
+FLAG_MISSING_SALARY_LIMIT = -1
+
 ## Jooble-related
 ### Experience
 EXP_ANY       = 0
@@ -66,6 +69,7 @@ REGION        = ''
 JOB_TYPES     = ['full', 'temp', 'part']
 EXPERIENCE    = EXP_ANY
 
-SALARY_MIN       = 1
-SALARY_MAX       = 999999
+SALARY_MIN    = FLAG_MISSING_SALARY_LIMIT
+SALARY_MAX    = FLAG_MISSING_SALARY_LIMIT
+
 ONLY_WITH_SALARY = False
