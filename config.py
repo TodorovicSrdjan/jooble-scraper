@@ -11,8 +11,19 @@ EXPORT_RESULTS = True
 # Constats
 
 ## Generic
-### Nested objects inside job object
-RESULT_NESTED_OBJS=['company', 'location', 'awayData']
+### Result format
+RESULT_KEYS = [
+    'url',
+    'dateCaption',
+    'salary',
+    'content', 
+    'position',
+    'isRemoteJob',
+    'isResumeRequired',
+    'company_name',
+    'company_link',
+    'location_name'
+    ]
 
 ## Jooble-related
 ### Experience

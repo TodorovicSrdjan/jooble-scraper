@@ -48,6 +48,7 @@ def main(args):
     jobs = request_data(url, form_data)
 
     normalized_jobs = normalize_job_data(jobs)
+    filtered_jobs = filter_job_data(normalized_jobs)
     
     if should_export:
         save_to_csv(normalized_jobs)
@@ -242,6 +243,9 @@ def normalize_job_data(jobs, nested_objs=config.RESULT_NESTED_OBJS):
         
     return normalized
  
+def filter_job_data(jobs, keys=config.RESULT_KEYS):
+    return [{key:value for key, value in job.items() if key in keys} for job in jobs]
+
 def save_to_csv(jobs):
     print("Exporting data...")
     
