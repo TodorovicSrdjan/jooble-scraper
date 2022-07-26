@@ -192,7 +192,7 @@ def request_data(url, form_data, npage=0):
     to_be_fetched = 1
     http = urllib3.PoolManager()
         
-    while npage != to_be_fetched:
+    while to_be_fetched != npage and to_be_fetched != config.MAX_PAGES:
         form_data['page'] = to_be_fetched
         encoded_data = json.dumps(form_data).encode('utf-8')
         print("Sending request...")
@@ -203,12 +203,13 @@ def request_data(url, form_data, npage=0):
             headers={'Content-Type':'application/json'}
         )
         
-        print("Server response:", response.status , encoded_data, len(jobs))
+        print(f"Request ID: {to_be_fetched}; Server response: {response.status}", end='')
         if response.status != 200:
             break
         
         data = json.loads(response.data)['jobs']
-        print(data)
+        print(f"; Fetch jobs: {len(data)}", end='\n\n')
+        
         if len(data) == 0:
             break
         

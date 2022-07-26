@@ -1,9 +1,10 @@
 ################
 # General 
 
-PROGRAM_NAME = "Jooble Scraper"
-RESOURCE_PATH = "jooble.org/api/serp/jobs"
-REQ_DELAY = 4
+PROGRAM_NAME   = "Jooble Scraper"
+RESOURCE_PATH  = "jooble.org/api/serp/jobs"
+REQ_DELAY      = 4
+MAX_PAGES      = 6
 
 ################
 # Constats
