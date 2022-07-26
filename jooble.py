@@ -36,7 +36,8 @@ class CountryCodeAction(argparse.Action):
 def main(args):
     form_data = get_form_data(args)
     
-    if len(sys.argv) == 0:
+    # check if default values from config file should be used
+    if len(sys.argv) == 1:
         form_data['country_code'] = config.COUNTRY_CODE
     url = f"https://{form_data['country_code']}.{config.RESOURCE_PATH}"
     del form_data['country_code']
@@ -172,7 +173,7 @@ def adapt_args_for_api(args):
     return args
 
 def get_form_data(args):
-    if len(args) < 1:
+    if len(sys.argv) == 1:
         args = {
                 'date'       : config.DATE,
                 'experience' : config.EXPERIENCE,
