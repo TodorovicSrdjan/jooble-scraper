@@ -11,6 +11,13 @@ EXPORT_RESULTS = True
 # Constats
 
 ## Generic
+### Names of nested data objects inside a job object
+RESULT_NESTED_OBJS = [
+    'company',
+    'location',
+    'awayData'
+    ]
+
 ### Result format
 RESULT_KEYS = [
     'url',
