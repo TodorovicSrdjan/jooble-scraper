@@ -35,10 +35,13 @@ class CountryCodeAction(argparse.Action):
 
 def main(args):
     form_data = get_form_data(args)
+    should_export = args['export']
     
     # check if default values from config file should be used
     if len(sys.argv) == 1:
         form_data['country_code'] = config.COUNTRY_CODE
+        should_export = config.EXPORT_RESULTS
+        
     url = f"https://{form_data['country_code']}.{config.RESOURCE_PATH}"
     del form_data['country_code']
     
@@ -46,7 +49,7 @@ def main(args):
 
     normalized_jobs = normalize_job_data(jobs)
     
-    if args['export']:
+    if should_export:
         save_to_csv(normalized_jobs)
         
 '''

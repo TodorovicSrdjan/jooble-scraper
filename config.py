@@ -5,6 +5,7 @@ PROGRAM_NAME   = "Jooble Scraper"
 RESOURCE_PATH  = "jooble.org/api/serp/jobs"
 REQ_DELAY      = 4
 MAX_PAGES      = 6
+EXPORT_RESULTS = True
 
 ################
 # Constats
