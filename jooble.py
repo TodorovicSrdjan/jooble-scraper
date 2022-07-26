@@ -97,14 +97,14 @@ def parse_arguments():
     parser.add_argument('-m', '--min-salary', 
                         help='show jobs with salary greater then MIN',
                         type=int,
-                        default=FLAG_MISSING_SALARY_LIMIT,
+                        default=config.FLAG_MISSING_SALARY_LIMIT,
                         dest='salaryMin', 
                         metavar='MIN')
     
     parser.add_argument('-M', '--max-salary', 
                         help='show jobs with salary lower then MAX',
                         type=int,
-                        default=FLAG_MISSING_SALARY_LIMIT,
+                        default=config.FLAG_MISSING_SALARY_LIMIT,
                         dest='salaryMax', 
                         metavar='MAX')
     
