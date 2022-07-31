@@ -43,6 +43,9 @@ def main(args):
         form_data['country_code'] = config.COUNTRY_CODE
         should_export = config.EXPORT_RESULTS
         should_notify_telegram = config.SEND_NOTIF_TELEGRAM
+    else:
+        del form_data['export']
+        del form_data['telegram']
         
     url = f"https://{form_data['country_code']}.{config.RESOURCE_PATH}"
     del form_data['country_code']
