@@ -34,21 +34,16 @@ RESULT_NESTED_OBJS = [
 ### Result format
 RESULT_KEYS = [
     'url',
-    'dateCaption',
-    'salary',
-    'content', 
     'position',
     'isRemoteJob',
+    'dateCaption',
+    'location_name',
+    'salary',
+    'content', 
     'isResumeRequired',
     'company_name',
-    'company_link',
-    'location_name'
+    'company_link'
     ]
-
-### Script flags
-FLAG_MISSING_TOKEN_ID     = ''
-FLAG_MISSING_CHAT_ID      = -1
-FLAG_MISSING_SALARY_LIMIT = -1
 
 ## Jooble-related
 ### Experience

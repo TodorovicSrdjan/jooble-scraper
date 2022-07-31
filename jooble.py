@@ -246,6 +246,10 @@ def request_data(url, form_data, npage=0):
             break
         
         jobs += data
+        
+        for i, job in enumerate(jobs):
+            jobs[i]['position'] = job['position'].replace(r'<span>', '').replace(r'</span>', '')
+        
         to_be_fetched += 1
         
         sleep(config.REQ_DELAY)
