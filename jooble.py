@@ -36,11 +36,13 @@ class CountryCodeAction(argparse.Action):
 def main(args):
     form_data = get_form_data(args)
     should_export = args['export']
+    should_notify_telegram = args['telegram']
     
     # check if default values from config file should be used
     if len(sys.argv) == 1:
         form_data['country_code'] = config.COUNTRY_CODE
         should_export = config.EXPORT_RESULTS
+        should_notify_telegram = config.SEND_NOTIF_TELEGRAM
         
     url = f"https://{form_data['country_code']}.{config.RESOURCE_PATH}"
     del form_data['country_code']
@@ -55,6 +57,12 @@ def main(args):
     
     if should_export:
         save_to_csv(filtered_jobs)
+        
+    if should_notify_telegram:
+        if config.TELEGRAM_BOT_TOKEN != config.FLAG_MISSING_TOKEN_ID and config.TELEGRAM_CHAT_ID != config.FLAG_MISSING_CHAT_ID:
+            notify_via_telegram(filtered_jobs)
+        else:
+            print('Telegram parameters are not set. Please set valid values for "TELEGRAM_BOT_TOKEN" and "TELEGRAM_CHAT_ID" in the file: config.py')
         
 '''
 Prints out program banner
@@ -122,6 +130,11 @@ def parse_arguments():
     parser.add_argument('-S', '--only-with-salary', 
                         help='exclude posts which do not have specified salary',
                         dest='withSalary', 
+                        action='store_true')
+    
+    parser.add_argument('-T', '--telegram', 
+                        help='send results as notification (message) to telegram bot',
+                        dest='telegram', 
                         action='store_true')
     
     #parser.add_argument('-t', '--job-type', 
@@ -279,6 +292,30 @@ def save_to_csv(jobs):
         
     print(f"Data is successfuly exported to '{file_name}'")    
     
+def notify_via_telegram(jobs, url=config.TELEGRAM_BOT_URL, output_keys=config.RESULT_KEYS):
+    http = urllib3.PoolManager()
+    ord_diff = ord('a') - ord('A')
+    
+    for i, job in enumerate(jobs):
+        html = ''
+        
+        for key in output_keys:
+            if job[key] is not None and job[key] != '':
+                html += f'*{chr( ord(key[0]) - ord_diff ) + key[1:]}*: {job[key]}\n'
+                
+        print('Sending notification to Telegram bot...')
+        response = http.request(
+            'POST',
+            url + f'&text={html}',
+            headers={'Content-Type':'application/json'}
+            )
+        
+        print(f'Job ID: {i}; Server response: {response.status}', end='\n\n')
+        if response.status != 200:
+            continue # TODO handle this properly in the future
+            
+    print('Data for all jobs is sent to the bot')
+
 if __name__ == '__main__':
     args = parse_arguments()
     print_program_banner()

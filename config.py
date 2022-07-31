@@ -1,16 +1,29 @@
 ################
+# Script flags
+FLAG_MISSING_TOKEN_ID     = ''
+FLAG_MISSING_CHAT_ID      = -1
+FLAG_MISSING_SALARY_LIMIT = -1
+
+################
 # General 
 
-PROGRAM_NAME   = 'Jooble Scraper'
-RESOURCE_PATH  = 'jooble.org/api/serp/jobs'
-REQ_DELAY      = 3
-MAX_PAGES      = 6
-EXPORT_RESULTS = True
+PROGRAM_NAME        = 'Jooble Scraper'
+REQ_DELAY           = 3
+MAX_PAGES           = 6
+EXPORT_RESULTS      = False
+SEND_NOTIF_TELEGRAM = True
+
+TELEGRAM_BOT_TOKEN  = FLAG_MISSING_TOKEN_ID
+TELEGRAM_CHAT_ID    = FLAG_MISSING_CHAT_ID
 
 ################
 # Constats
 
 ## Generic
+### Links
+RESOURCE_PATH    = 'jooble.org/api/serp/jobs'
+TELEGRAM_BOT_URL = f'https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage?chat_id={TELEGRAM_CHAT_ID}&parse_mode=Markdown'
+
 ### Names of nested data objects inside a job object
 RESULT_NESTED_OBJS = [
     'company',
@@ -33,6 +46,8 @@ RESULT_KEYS = [
     ]
 
 ### Script flags
+FLAG_MISSING_TOKEN_ID     = ''
+FLAG_MISSING_CHAT_ID      = -1
 FLAG_MISSING_SALARY_LIMIT = -1
 
 ## Jooble-related
