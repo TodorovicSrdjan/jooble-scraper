@@ -306,17 +306,25 @@ def notify_via_telegram(jobs, url=config.TELEGRAM_BOT_URL, output_keys=config.RE
         for key in output_keys:
             if job[key] is not None and job[key] != '':
                 html += f'*{chr( ord(key[0]) - ord_diff ) + key[1:]}*: {job[key]}\n'
-                
-        print('Sending notification to Telegram bot...')
-        response = http.request(
-            'POST',
-            url + f'&text={html}',
-            headers={'Content-Type':'application/json'}
-            )
         
-        print(f'Job ID: {i}; Server response: {response.status}', end='\n\n')
-        if response.status != 200:
-            continue # TODO handle this properly in the future
+        exponential_sleep_time = 2
+        
+        while True:
+            print('Sending notification to Telegram bot...')
+            response = http.request(
+                'POST',
+                url + f'&text={html}',
+                headers={'Content-Type':'application/json'}
+                )
+            
+            print(f'Job ID: {i}; Server response: {response.status}', end='\n\n')
+            if response.status == 200:
+                break
+            elif response.status == 429: # Too Many Requests
+                sleep(exponential_sleep_time)
+                exponential_sleep_time = exponential_sleep_time**2
+                    
+        sleep(config.REQ_DELAY)
             
     print('Data for all jobs is sent to the bot')
 
