@@ -200,7 +200,7 @@ def request_data(url, form_data, npage=0):
     to_be_fetched = 1
     http = urllib3.PoolManager()
         
-    while to_be_fetched != npage and to_be_fetched != config.MAX_PAGES:
+    while to_be_fetched != npage and to_be_fetched <= config.MAX_PAGES:
         form_data['page'] = to_be_fetched
         encoded_data = json.dumps(form_data).encode('utf-8')
         print("Sending request...")
