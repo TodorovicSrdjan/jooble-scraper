@@ -65,7 +65,7 @@ def main(args):
         if config.TELEGRAM_BOT_TOKEN != config.FLAG_MISSING_TOKEN_ID and config.TELEGRAM_CHAT_ID != config.FLAG_MISSING_CHAT_ID:
             notify_via_telegram(filtered_jobs)
         else:
-            print('Telegram parameters are not set. Please set valid values for "TELEGRAM_BOT_TOKEN" and "TELEGRAM_CHAT_ID" in the file: config.py')
+            print('Telegram parameters are not set. Please set valid values for "TELEGRAM_BOT_TOKEN" and "TELEGRAM_CHAT_ID" in the file: constants.py')
         
 '''
 Prints out program banner
