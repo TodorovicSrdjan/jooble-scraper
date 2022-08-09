@@ -46,6 +46,7 @@ def main(args):
     else:
         del form_data['export']
         del form_data['telegram']
+        print('Command-line argument passed. Ignoring search and result values from config file...', end='\n\n')
         
     url = f"https://{form_data['country_code']}.{config.RESOURCE_PATH}"
     del form_data['country_code']
@@ -53,8 +54,7 @@ def main(args):
     jobs = request_data(url, form_data)
     if len(jobs) == 0:
         print('No matches found for given search filters')
-        sys.exit()
-        
+        sys.exit() 
     normalized_jobs = normalize_job_data(jobs)
     filtered_jobs = filter_job_data(normalized_jobs)
     
@@ -76,7 +76,7 @@ def print_program_banner():
     print(f"{line}\n= {config.PROGRAM_NAME} =\n{line}")
     
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="Fetch and get notification for filtered jobs from jooble.org")
+    parser = argparse.ArgumentParser(description="Fetch filtered jobs from jooble.org and get results as notification")
     
     parser.add_argument('-c', '--country-code', 
                         help='upper limit for number of days since job is posted',
@@ -120,7 +120,7 @@ def parse_arguments():
                         metavar='MAX')
     
     parser.add_argument('-r', '--region', 
-                        help='filter by region in the country (-c or --country-code option is necessary for this option since region is part of the country)',
+                        help='filter by region in the country (-c or --country-code option is necessary for this option since region is a part of the country)',
                         type=str,
                         default='',
                         required=False)
@@ -238,7 +238,7 @@ def request_data(url, form_data, npage=0):
             headers={'Content-Type':'application/json'}
         )
         
-        print(f"Request ID: {to_be_fetched}; Server response: {response.status}", end='')
+        print(f"Request#{to_be_fetched}\t Server response: {response.status}", end='')
         if response.status != 200:
             break
         
@@ -284,7 +284,7 @@ def save_to_csv(jobs):
         print('Job list is empty. Data export is aborted')
         return
     
-    print("Exporting data...")
+    print("Exporting data to csv file...")
     
     # get current time without milliseconds
     current_time = str(datetime.now()).split('.')[0]
