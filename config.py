@@ -61,13 +61,13 @@ ONLY_WITH_SALARY = False
 # delay (in seconds) between sending each request (for job fetch or notification)
 # Values:
 #   any non-negative float number
-REQ_DELAY = 3
+REQ_DELAY = 2
 
 # maximum number of pages to be fetched if maximum number of pages is not passed
 # to the request function
 # Values:
 #   any positive number
-MAX_PAGES = 6
+MAX_PAGES = 3
 ################
 
 ################
@@ -76,12 +76,12 @@ MAX_PAGES = 6
 # defines wheter results should be exported to a file or not
 # Values:
 #   True, False
-EXPORT_RESULTS = False
+EXPORT_RESULTS = True
 
 # defines wheter results should be send to Telegram as notification or not
 # Values:
 #   True, False
-SEND_NOTIF_TELEGRAM = True
+SEND_NOTIF_TELEGRAM = False
 ################
 
 ################
