@@ -6,33 +6,6 @@ from time import sleep
 
 #################################################################
 
-class CountryCodeAction(argparse.Action):
-    def __init__(self, check_func, *args, **kwargs):
-        """
-        argparse custom action.
-        :param check_func: callable to do the real check.
-        """
-        self._check_func = check_func
-        super(CountryCodeAction, self).__init__(*args, **kwargs)
-        
-    def __call__(self, parser, namespace, values, option_string=None):
-        #print('%r %r %r' % (namespace, values, option_string))
-        
-        if isinstance(values, list):
-            values = [self._check_func(parser, v) for v in values]
-        else:
-            values = self._check_func(parser, values)
-        setattr(namespace, self.dest, values)
-    
-    @staticmethod
-    def __chk__(parser, country_code):
-        if len(country_code) > 2 or not country_code.isalpha():
-            raise ValueError("country code must have exactly 2 letters")
-        
-        return country_code
-        
-#################################################################
-
 def main(args):
     form_data = get_form_data(args)
     should_export = args['export']
@@ -330,6 +303,35 @@ def notify_via_telegram(jobs, url=config.TELEGRAM_BOT_URL, output_keys=config.RE
         sleep(config.REQ_DELAY)
             
     print('Data for all jobs is sent to the bot')
+    
+#################################################################
+
+class CountryCodeAction(argparse.Action):
+    def __init__(self, check_func, *args, **kwargs):
+        """
+        argparse custom action.
+        :param check_func: callable to do the real check.
+        """
+        self._check_func = check_func
+        super(CountryCodeAction, self).__init__(*args, **kwargs)
+        
+    def __call__(self, parser, namespace, values, option_string=None):
+        #print('%r %r %r' % (namespace, values, option_string))
+        
+        if isinstance(values, list):
+            values = [self._check_func(parser, v) for v in values]
+        else:
+            values = self._check_func(parser, values)
+        setattr(namespace, self.dest, values)
+    
+    @staticmethod
+    def __chk__(parser, country_code):
+        if len(country_code) > 2 or not country_code.isalpha():
+            raise ValueError("country code must have exactly 2 letters")
+        
+        return country_code
+        
+#################################################################
 
 if __name__ == '__main__':
     args = parse_arguments()
