@@ -8,8 +8,8 @@ FLAG_MISSING_SALARY_LIMIT = -1
 ################
 # General 
 PROGRAM_NAME       = 'Jooble Scraper'
-TELEGRAM_BOT_TOKEN = '5576098565:AAGTxy01G9LnuTkh-kOWH1aqfzgGsJeSOtY'
-TELEGRAM_CHAT_ID   = 955586611
+TELEGRAM_BOT_TOKEN = FLAG_MISSING_TOKEN_ID
+TELEGRAM_CHAT_ID   = FLAG_MISSING_CHAT_ID
 ################
 
 #############################################################################

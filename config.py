@@ -76,12 +76,12 @@ MAX_PAGES = 3
 # defines wheter results should be exported to a file or not
 # Values:
 #   True, False
-EXPORT_RESULTS = False
+EXPORT_RESULTS = True
 
 # defines wheter results should be send to Telegram as notification or not
 # Values:
 #   True, False
-SEND_NOTIF_TELEGRAM = True
+SEND_NOTIF_TELEGRAM = False
 ################
 
 ################
