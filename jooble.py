@@ -39,6 +39,8 @@ def main(args):
     filtered_job_details = filter_job_data(normalized_jobs)
     filtered_jobs = filter_jobs(jobs, regex)
     
+    print(f'Found {len(filtered_jobs)} job(s) that satisfy set filters.\n')
+    
     if should_export:
         save_to_csv(filtered_jobs)
         
@@ -249,7 +251,7 @@ def request_data(url, form_data, npage=0):
             headers={'Content-Type':'application/json'}
         )
         
-        print(f"Request#{to_be_fetched}\t Server response: {response.status}", end='')
+        print(f"Request#{to_be_fetched}\n\tServer response: {response.status}", end='')
         if response.status != 200:
             break
         
@@ -328,7 +330,7 @@ def save_to_csv(jobs):
     '''
 
     if jobs == []:
-        print('Job list is empty. Data export is aborted')
+        print('Job list is empty. Data export is aborted\n')
         return
     
     jobs = [dict(job) for job in jobs]
@@ -351,7 +353,7 @@ def save_to_csv(jobs):
         csv_writer.writerow( list(jobs[0].keys()) )
         csv_writer.writerows( [job.values() for job in jobs] )
         
-    print(f"Data is successfuly exported to '{file_name}'")    
+    print(f"Data is successfuly exported to '{file_name}'\n")    
     
 def notify_via_telegram(jobs, url=config.TELEGRAM_BOT_URL, output_keys=config.RESULT_KEYS):
     '''Send job details as a message using Telegram bot. If bot returns status code 429 (Too Many Requests)
