@@ -251,9 +251,10 @@ def request_data(url, form_data, npage=0):
         
         jobs += data
         
-        # Removes span tag from attribute 'position' 
+        # Remove HTML tag span
         for i, job in enumerate(jobs):
-            jobs[i]['position'] = job['position'].replace(r'<span>', '').replace(r'</span>', '')
+            jobs[i]['position'] = job['position'].replace(r'<span>', '').replace(r'</span>', '').replace(r'&nbsp', '')
+            jobs[i]['content'] = job['content'].replace(r'<span>', '').replace(r'</span>', '').replace(r'&nbsp', '')
         
         to_be_fetched += 1
         
@@ -309,6 +310,7 @@ def save_to_csv(jobs):
         print('Job list is empty. Data export is aborted')
         return
     
+    jobs = [dict(job) for job in jobs]
     print("Exporting data to csv file...")
     
     # get current time without milliseconds
@@ -316,6 +318,12 @@ def save_to_csv(jobs):
     
     # replace spaces to avoid problems with filename
     file_name = current_time.replace(' ', '_') + '.csv'
+    
+    # Convert HTML bolding into markdown bolding
+    for i, job in enumerate(jobs):
+        for key in job:
+            if isinstance(job[key], str):
+                jobs[i][key] = job[key].replace('<b>', '').replace('</b>', '')
     
     with open(file_name, 'w', newline = '') as csv_file:
         csv_writer = csv.writer( csv_file, quoting=csv.QUOTE_NONNUMERIC )    
@@ -335,6 +343,8 @@ def notify_via_telegram(jobs, url=config.TELEGRAM_BOT_URL, output_keys=config.RE
     :param url: url of Telegram bot which will send the message. If not specified configuration file will be used.
     :param output_keys: ordered list of detail keys which will be included in the result. Order will be perserved. If not specified configuration file will be used.
     '''
+    
+    jobs = [dict(job) for job in jobs]
     http = urllib3.PoolManager()
     ord_diff = ord('a') - ord('A')
     
@@ -343,10 +353,13 @@ def notify_via_telegram(jobs, url=config.TELEGRAM_BOT_URL, output_keys=config.RE
         
         for key in output_keys:
             if job[key] is not None and job[key] != '':
+                # Convert HTML bolding into markdown italic
+                if isinstance(job[key], str):
+                    job[key] = job[key].replace('<b>', '_').replace('</b>', '_')
+                    
                 html += f'*{chr( ord(key[0]) - ord_diff ) + key[1:]}*: {job[key]}\n'
         
         exponential_sleep_time = 2
-        
         while True:
             print('Sending notification to Telegram bot...')
             response = http.request(
