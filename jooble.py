@@ -1,6 +1,6 @@
 import config
 
-import urllib3, json, argparse, csv, sys
+import urllib3, json, argparse, csv, sys, re
 from datetime import datetime
 from time import sleep
 
@@ -12,17 +12,20 @@ def main(args):
     '''
 
     form_data = get_form_data(args)
+    regex = args['content_regex']
     should_export = args['export']
     should_notify_telegram = args['telegram']
     
     # check if default values from config file should be used
     if len(sys.argv) == 1:
+        regex = config.CONTENT_REGEX
         form_data['country_code'] = config.COUNTRY_CODE
         should_export = config.EXPORT_RESULTS
         should_notify_telegram = config.SEND_NOTIF_TELEGRAM
     else:
         del form_data['export']
         del form_data['telegram']
+        del form_data['content_regex']
         print('Command-line argument passed. Ignoring search and result values from config file...', end='\n\n')
         
     url = f"https://{form_data['country_code']}.{config.RESOURCE_PATH}"
@@ -33,7 +36,8 @@ def main(args):
         print('No matches found for given search filters')
         sys.exit() 
     normalized_jobs = normalize_job_data(jobs)
-    filtered_jobs = filter_job_data(normalized_jobs)
+    filtered_job_details = filter_job_data(normalized_jobs)
+    filtered_jobs = filter_jobs(jobs, regex)
     
     if should_export:
         save_to_csv(filtered_jobs)
@@ -65,6 +69,12 @@ def parse_arguments():
                         required='-r' in sys.argv or '--region' in sys.argv,
                         action=CountryCodeAction,
                         check_func=CountryCodeAction.__chk__)
+    
+    parser.add_argument('-cr', '--content-regex', 
+                        help='filter jobs by job content regex)',
+                        type=str,
+                        default='',
+                        required=False)
     
     parser.add_argument('-d', '--days-ago', 
                         help='upper limit for number of days since job is posted',
@@ -298,6 +308,17 @@ def filter_job_data(jobs, keys=config.RESULT_KEYS):
     '''
 
     return [{key:value for key, value in job.items() if key in keys} for job in jobs]
+
+def filter_jobs(jobs, content_regex=config.CONTENT_REGEX):
+    '''Filter jobs by regex for job content. If the regex is not provided then list from the 
+    configuration is used.
+
+    :param jobs: list of dictionaries which contain job details.
+    :param content_regex: regex to be used for filtering jobs by content.
+    :return: filtered list of dictionaries which represent a job.
+    '''
+    
+    return [job for job in jobs if re.search(content_regex, job['content'].lower())]
 
 def save_to_csv(jobs):
     '''Save list of job details into a CSV file. The file will be saved in the directory

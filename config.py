@@ -85,6 +85,15 @@ SEND_NOTIF_TELEGRAM = True
 ################
 
 ################
+# Regular expressions
+
+# regular expression for filtering jobs by content
+# Values:
+#   any string which represents valid regular expression 
+CONTENT_REGEX = ''
+################
+
+################
 # list of keys whose values will be present for each job in the result (and in what order)
 # Values (for elements of this list): 
 #   'url','isUrlHiddenFromCrawler','uid','dateCaption','salary','content','fullContent','position',  
