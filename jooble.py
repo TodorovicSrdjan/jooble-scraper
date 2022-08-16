@@ -7,6 +7,10 @@ from time import sleep
 #################################################################
 
 def main(args):
+    '''
+    :param args: dictionary of parsed command-line arguments
+    '''
+
     form_data = get_form_data(args)
     should_export = args['export']
     should_notify_telegram = args['telegram']
@@ -40,15 +44,18 @@ def main(args):
         else:
             print('Telegram parameters are not set. Please set valid values for "TELEGRAM_BOT_TOKEN" and "TELEGRAM_CHAT_ID" in the file: constants.py')
         
-'''
-Prints out program banner
-'''
-def print_program_banner():
+def print_program_banner():        
+    '''Prints out program banner'''
+    
     l = len(config.PROGRAM_NAME)
     line = "="*(l+4)
     print(f"{line}\n= {config.PROGRAM_NAME} =\n{line}")
     
 def parse_arguments():
+    '''Parse command-line arguments and return result on the success
+
+    :return: dictionary of parsed command-line arguments
+    '''  
     parser = argparse.ArgumentParser(description="Fetch filtered jobs from jooble.org and get results as notification")
     
     parser.add_argument('-c', '--country-code', 
@@ -127,6 +134,12 @@ def parse_arguments():
     return vars(parser.parse_args())
     
 def adapt_args_for_api(args):
+    '''Adapt and validate request parameters to match Jooble's API values.
+
+    :param args: dictionary of arguments to be adapted and valited for the API
+    :return: dictionary of adapted arguments
+    '''
+
     if 'salaryMin' in args and args['salaryMin'] == config.FLAG_MISSING_SALARY_LIMIT:
         del args['salaryMin']
         
@@ -181,6 +194,13 @@ def adapt_args_for_api(args):
     return args
 
 def get_form_data(args):
+    '''Prepare data form request form to be sent to Jooble. Depending on number of command-line arguments
+    function will either use passed command-line data or data from configuration file.
+
+    :param args: dictionary of parsed command-line arguments.
+    :return: dictionary to be sent as request form data.
+    '''
+
     if len(sys.argv) == 1:
         args = {
                 'date'       : config.DATE,
@@ -196,6 +216,14 @@ def get_form_data(args):
     return adapt_args_for_api(args)
     
 def request_data(url, form_data, npage=0):
+    '''Send request to Jooble's API for up to `npage` pages of results or up to `MAX_PAGES` if the `npage` 
+    argument is not specified. The jobs that are part of the page are not normalized. 
+
+    :param url: URL for Jooble's API where request will be sent.
+    :param form_data: dictionary of parameters to be sent as form data.
+    :return: list of dictionaries which contain non-normalized job details.
+    '''
+
     jobs = []
     to_be_fetched = 1
     http = urllib3.PoolManager()
@@ -223,6 +251,7 @@ def request_data(url, form_data, npage=0):
         
         jobs += data
         
+        # Removes span tag from attribute 'position' 
         for i, job in enumerate(jobs):
             jobs[i]['position'] = job['position'].replace(r'<span>', '').replace(r'</span>', '')
         
@@ -233,6 +262,15 @@ def request_data(url, form_data, npage=0):
     return jobs
 
 def normalize_job_data(jobs, nested_objs=config.RESULT_NESTED_OBJS):
+    '''Normalize job details by flattening nested objects and by joining multiple values
+    into single value. This is done to prepare the data for other functions which require
+    normalzed data to function properly.
+
+    :param jobs: list of dictionaries which contain job details.
+    :param nested_objs: list of keys of the objects that contain one or more nested objects.
+    :return: list of dictionaries which contain normalized job details.
+    '''
+
     normalized = []
     
     for job in jobs:
@@ -250,9 +288,23 @@ def normalize_job_data(jobs, nested_objs=config.RESULT_NESTED_OBJS):
     return normalized
 
 def filter_job_data(jobs, keys=config.RESULT_KEYS):
+    '''Filter job details by including only details whose key is in provided list of detail keys. 
+    If the list is not provided then list from the configuration is used.
+
+    :param jobs: list of dictionaries which contain job details.
+    :param keys: list of detail keys that can be present in the result.
+    :return: list of dictionaries which contain filtered job details.
+    '''
+
     return [{key:value for key, value in job.items() if key in keys} for job in jobs]
 
 def save_to_csv(jobs):
+    '''Save list of job details into a CSV file. The file will be saved in the directory
+    from which the script was called.
+
+    :param jobs: list of dictionaries which contain job details.
+    '''
+
     if jobs == []:
         print('Job list is empty. Data export is aborted')
         return
@@ -273,6 +325,16 @@ def save_to_csv(jobs):
     print(f"Data is successfuly exported to '{file_name}'")    
     
 def notify_via_telegram(jobs, url=config.TELEGRAM_BOT_URL, output_keys=config.RESULT_KEYS):
+    '''Send job details as a message using Telegram bot. If bot returns status code 429 (Too Many Requests)
+    program will pause for 2 seconds and then exponentialy increese that pause after each unsuccessful 
+    request which received this status code. On success pause time will be restored to 2 seconds.
+
+    Between each message sent there is a delay which lasts REQ_DELAY seconds. 
+    
+    :param jobs: list of dictionaries which contain job details.
+    :param url: url of Telegram bot which will send the message. If not specified configuration file will be used.
+    :param output_keys: ordered list of detail keys which will be included in the result. Order will be perserved. If not specified configuration file will be used.
+    '''
     http = urllib3.PoolManager()
     ord_diff = ord('a') - ord('A')
     
@@ -308,8 +370,8 @@ def notify_via_telegram(jobs, url=config.TELEGRAM_BOT_URL, output_keys=config.RE
 
 class CountryCodeAction(argparse.Action):
     def __init__(self, check_func, *args, **kwargs):
-        """
-        argparse custom action.
+        """argparse custom action.
+        
         :param check_func: callable to do the real check.
         """
         self._check_func = check_func
