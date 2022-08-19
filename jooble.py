@@ -35,9 +35,10 @@ def main(args):
     if len(jobs) == 0:
         print('No matches found for given search filters')
         sys.exit() 
+        
     normalized_jobs = normalize_job_data(jobs)
     filtered_job_details = filter_job_data(normalized_jobs)
-    filtered_jobs = filter_jobs(jobs, regex)
+    filtered_jobs = filter_jobs(filtered_job_details, regex)
     
     print(f'Found {len(filtered_jobs)} job(s) that satisfy set filters.\n')
     
