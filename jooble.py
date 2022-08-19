@@ -1,4 +1,5 @@
 import config
+import db
 
 import urllib3, json, argparse, csv, sys, re
 from datetime import datetime
@@ -13,6 +14,7 @@ def main(args):
 
     form_data = get_form_data(args)
     regex = args['content_regex']
+    should_store = not args['dont_store']
     should_export = args['export']
     should_notify_telegram = args['telegram']
     
@@ -20,9 +22,11 @@ def main(args):
     if len(sys.argv) == 1:
         regex = config.CONTENT_REGEX
         form_data['country_code'] = config.COUNTRY_CODE
+        should_store = config.STORE_INTO_DB
         should_export = config.EXPORT_RESULTS
         should_notify_telegram = config.SEND_NOTIF_TELEGRAM
     else:
+        del form_data['dont_store']
         del form_data['export']
         del form_data['telegram']
         del form_data['content_regex']
@@ -41,6 +45,9 @@ def main(args):
     filtered_job_details = filter_job_data(filtered_jobs)
     
     print(f'Found {len(filtered_jobs)} job(s) that satisfy set filters.\n')
+    
+    if should_store:
+        db.store_results(filtered_jobs)
     
     if should_export:
         save_to_csv(filtered_job_details)
@@ -85,6 +92,10 @@ def parse_arguments():
                         default=0,
                         dest='date',
                         choices=[0, 1, 3, 7])
+    
+    parser.add_argument('-ds', '--dont-store', 
+                        help='do not store results into database', 
+                        action='store_true')
     
     parser.add_argument('-e', '--experience', 
                         help='required experience for a job',

@@ -12,6 +12,11 @@ TELEGRAM_BOT_TOKEN = FLAG_MISSING_TOKEN_ID
 TELEGRAM_CHAT_ID   = FLAG_MISSING_CHAT_ID
 ################
 
+################
+# Database
+DB_FILE_PATH = 'jooble-jobs.db'
+################
+
 #############################################################################
 # DO NOT CHANGE ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING #
 #############################################################################
