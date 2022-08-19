@@ -46,7 +46,7 @@ def store_results(jobs):
     if len(jobs) != con.total_changes:
         print()
             
-    print("Result storing is complete. \nNumber of results that are stored this execution:", con.total_changes)
+    print("Result storing is complete. \nNumber of results that are stored in this execution:", con.total_changes, end='\n\n')
     cur.close()
     con.close()
     
