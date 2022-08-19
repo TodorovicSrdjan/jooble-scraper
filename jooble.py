@@ -296,6 +296,7 @@ def normalize_job_data(jobs, nested_objs=config.RESULT_NESTED_OBJS):
         
         # Make the tag list atomic
         job['tags'] = ', '.join(job['tags'])
+        job['tagsNew'] = ', '.join(job['tagsNew'])
         
         normalized.append(job)
         

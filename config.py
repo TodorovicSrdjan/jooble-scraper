@@ -99,7 +99,7 @@ CONTENT_REGEX = ''
 #   'url','isUrlHiddenFromCrawler','uid','dateCaption','salary','content','fullContent','position',  
 #   'isNew','isPremium','isEasyApply','isRemoteJob','isResumeRequired','isAdvertLabel','isFavorite', 
 #   'destination','similarGroupId','impressionId','recommendId','alreadyAppliedText','hasFewApplies', 
-#   'isJobLabelsDisabled','hasQuestions','projectLogoUrl','jobType','isDeleted','robots','id','tags', 
+#   'isJobLabelsDisabled','hasQuestions','projectLogoUrl','jobType','isDeleted','robots','id','tags','tagsNew', 
 #   'company_isVerified','company_name','company_link','company_isContactsVerified','company_doesHaveHires', 
 #   'company_doesHaveManyHires','company_isActiveResponses','company_logoUrl','location_name','location_link', 
 #   'location_isWalkingDistanceFromAddress','location_isShiftJob','awayData_domain','awayData_link'
