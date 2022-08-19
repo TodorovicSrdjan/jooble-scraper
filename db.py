@@ -49,3 +49,38 @@ def store_results(jobs):
     print("Result storing is complete. \nNumber of results that are stored this execution:", con.total_changes)
     cur.close()
     con.close()
+    
+def exclude_already_stored(jobs):
+    '''Filter jobs by excluding those which are not stored in the database.
+    
+    :param jobs: list of dictionaries which contain job details.
+    :return: filtered list of dictionaries which represent new job.
+    '''
+    
+    if len(jobs) == 0:
+        return
+    
+    # Check if database exists. If it doesn't then the list of jobs should
+    # be considered as list of new jobs (which are not seen before)
+    if not os.path.isfile(DB_FILE_PATH):
+        return jobs
+    
+    filtered = []
+    con = sqlite3.connect(DB_FILE_PATH)
+    cur = con.cursor()
+    
+    ids = tuple([int(job['uid']) for job in jobs])
+    placeholders = ', '.join('?'*len(ids))
+    
+    # Return found jobs which are also present in the database
+    query = f"SELECT uid from jobs WHERE uid IN ({placeholders});"
+    cur.execute(query, ids)
+    stored_ids = list(map(lambda x: x[0], cur.fetchall()))
+    
+    for job in jobs:
+        if int(job['uid']) not in stored_ids:
+            filtered.append(job)
+    cur.close()
+    con.close()
+    
+    return filtered
