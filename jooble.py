@@ -37,17 +37,17 @@ def main(args):
         sys.exit() 
         
     normalized_jobs = normalize_job_data(jobs)
-    filtered_job_details = filter_job_data(normalized_jobs)
-    filtered_jobs = filter_jobs(filtered_job_details, regex)
+    filtered_jobs = filter_jobs(normalized_jobs, regex)
+    filtered_job_details = filter_job_data(filtered_jobs)
     
     print(f'Found {len(filtered_jobs)} job(s) that satisfy set filters.\n')
     
     if should_export:
-        save_to_csv(filtered_jobs)
+        save_to_csv(filtered_job_details)
         
     if should_notify_telegram:
         if config.TELEGRAM_BOT_TOKEN != config.FLAG_MISSING_TOKEN_ID and config.TELEGRAM_CHAT_ID != config.FLAG_MISSING_CHAT_ID:
-            notify_via_telegram(filtered_jobs)
+            notify_via_telegram(filtered_job_details)
         else:
             print('Telegram parameters are not set. Please set valid values for "TELEGRAM_BOT_TOKEN" and "TELEGRAM_CHAT_ID" in the file: constants.py')
         
