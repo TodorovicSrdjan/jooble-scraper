@@ -194,7 +194,7 @@ def adapt_args_for_api(args):
         elif args['date'] == 3:
             args['date'] = config.DATE_3_DAYS
         elif args['date'] == 7:
-            args['date'] = DATE_7_DAYS 
+            args['date'] = config.DATE_7_DAYS 
     
     if 'location' in args:
         if args['location'] == 'any':
@@ -381,6 +381,8 @@ def notify_via_telegram(jobs, url=config.TELEGRAM_BOT_URL, output_keys=config.RE
     :param url: url of Telegram bot which will send the message. If not specified configuration file will be used.
     :param output_keys: ordered list of detail keys which will be included in the result. Order will be perserved. If not specified configuration file will be used.
     '''
+    if jobs is None:
+        return
     
     jobs = [dict(job) for job in jobs]
     http = urllib3.PoolManager()
