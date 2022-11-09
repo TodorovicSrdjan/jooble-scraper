@@ -24,7 +24,8 @@ def store_results(jobs):
         jobType text, isDeleted integer, robots text, id integer, tags text, tagsNew text, company_isVerified integer,  company_name text, 
         company_link text, company_isContactsVerified integer, company_doesHaveHires integer, company_doesHaveManyHires integer,
         company_isActiveResponses integer, company_logoUrl text, location_name text, location_link text, 
-        location_isWalkingDistanceFromAddress integer, location_isShiftJob integer, awayData_domain text, awayData_link text)'''
+        location_isWalkingDistanceFromAddress integer, location_isShiftJob integer, awayData_domain text, awayData_link text,
+        hasSimilarJobsLink integer, isDteJob integer)'''
         )
     
     tuple_jobs = [tuple(job.values()) for job in jobs]
