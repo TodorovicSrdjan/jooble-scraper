@@ -308,9 +308,11 @@ def normalize_job_data(jobs, nested_objs=config.RESULT_NESTED_OBJS):
             del job[nested_obj]
         
         # Make the tag list atomic
+        # TODO: make a list of array tags in constants.py
         job['tags'] = ', '.join(job.get('tags', ''))
         job['tagsNew'] = ', '.join(job.get('tagsNew', ''))
-        
+        job['highlightTags'] = ', '.join(job.get('highlightTags', ''))
+                
         normalized.append(job)
         
     return normalized

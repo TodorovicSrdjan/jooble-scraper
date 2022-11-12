@@ -21,9 +21,9 @@ def store_results(jobs):
         position text, isNew integer, isPremium integer, isEasyApply integer, isRemoteJob integer, isResumeRequired integer, 
         isAdvertLabel integer, isFavorite integer, destination text, similarGroupId integer, impressionId integer, recommendId integer, 
         alreadyAppliedText text, hasFewApplies integer, isJobLabelsDisabled integer, hasQuestions integer, projectLogoUrl text, 
-        jobType text, isDeleted integer, robots text, id integer, tags text, tagsNew text, company_isVerified integer,  company_name text, 
-        company_link text, company_isContactsVerified integer, company_doesHaveHires integer, company_doesHaveManyHires integer,
-        company_isActiveResponses integer, company_logoUrl text, location_name text, location_link text, 
+        jobType text, isDeleted integer, robots text, id integer, tags text, tagsNew text, highlightTags text, company_isVerified integer,  
+        company_name text, company_link text, company_isContactsVerified integer, company_doesHaveHires integer, 
+        company_doesHaveManyHires integer, company_isActiveResponses integer, company_logoUrl text, location_name text, location_link text, 
         location_isWalkingDistanceFromAddress integer, location_isShiftJob integer, awayData_domain text, awayData_link text,
         hasSimilarJobsLink integer, isDteJob integer)'''
         )
